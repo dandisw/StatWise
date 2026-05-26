@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StatWise by DSW - Absolute Edition</title>
+<title>StatWise by DSW - Master Report Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -70,13 +70,16 @@ select.var-input { cursor: pointer; }
 select.var-input option { background: var(--surface); color: var(--text); }
 tr:hover td { background: var(--surface-hover); }
 
-.result-panel { position: absolute; top: 0; right: 0; bottom: 0; width: 550px; background: var(--surface); border-left: 1px solid var(--border); box-shadow: -4px 0 15px rgba(0,0,0,0.3); transform: translateX(100%); transition: transform 0.3s ease, background 0.3s; display: flex; flex-direction: column; z-index: 50; }
+/* PANEL HASIL */
+.result-panel { position: absolute; top: 0; right: 0; bottom: 0; width: 600px; background: var(--surface); border-left: 1px solid var(--border); box-shadow: -4px 0 15px rgba(0,0,0,0.3); transform: translateX(100%); transition: transform 0.3s ease, background 0.3s; display: flex; flex-direction: column; z-index: 50; }
 .result-panel.open { transform: translateX(0); }
-.result-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--surface-hover); transition: background 0.3s; }
+.result-header { padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--surface-hover); transition: background 0.3s; }
 .result-title { font-size: 16px; font-weight: 600; font-family: var(--font-serif); color: var(--primary); }
-.close-btn { cursor: pointer; font-size: 20px; color: var(--text3); background: none; border: none; transition: color 0.2s; }
+.close-btn { cursor: pointer; font-size: 24px; color: var(--text3); background: none; border: none; transition: color 0.2s; line-height: 1; margin-left: 15px; }
 .close-btn:hover { color: var(--danger); }
 .result-body { padding: 20px; overflow-y: auto; flex: 1; }
+/* Container untuk menumpuk hasil */
+#res-content-area { display: flex; flex-direction: column; gap: 30px; }
 
 .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 16px; }
 .stat-box { background: var(--bg); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: center; transition: background 0.3s; }
@@ -85,27 +88,28 @@ tr:hover td { background: var(--surface-hover); }
 .verdict { padding: 12px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; margin-bottom: 16px; line-height: 1.5; }
 .v-pass { background: var(--success-light); color: var(--success); border: 1px solid var(--success); }
 .v-fail { background: var(--danger-light); color: var(--danger); border: 1px solid var(--danger); }
-.v-info { background: var(--info-light); color: var(--info); border: 1px solid var(--primary); }
-.r-note { background: var(--surface-hover); padding: 12px; border-radius: 8px; font-size: 13px; color: var(--text2); line-height: 1.6; border-left: 3px solid var(--primary); margin-top: 15px; margin-bottom: 15px;}
+.r-note { background: var(--surface-hover); padding: 12px; border-radius: 8px; font-size: 13px; color: var(--text2); line-height: 1.6; border-left: 4px solid var(--primary); margin-top: 15px; margin-bottom: 25px;}
 .r-alert { background: var(--danger-light); color: var(--danger); padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 10px; }
 
 .res-table { width: 100%; font-size: 12px; margin-bottom: 16px; border-collapse: collapse; }
 .res-table th { background: var(--bg); font-weight: 600; padding: 8px; border-bottom: 1px solid var(--border); text-align: left; color: var(--text); transition: background 0.3s; }
 .res-table td { padding: 8px; font-family: var(--font-mono); border-bottom: 1px solid var(--border); color: var(--text); }
 .res-table tr:last-child td { border-bottom: none; }
-.notation-b { color: var(--primary); font-family: var(--font-sans) !important; font-weight: 600; font-size: 13px; }
+.notation-b { color: var(--danger); font-family: var(--font-sans) !important; font-weight: 600; font-size: 13px; }
 
-.native-chart-card { margin-top: 20px; padding: 15px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; transition: background 0.3s; }
+/* GRAFIK NATIVE */
+.native-chart-card { margin-top: 20px; margin-bottom: 15px; padding: 15px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; transition: background 0.3s; }
 .chart-title { font-size: 13px; font-weight: 600; text-align: center; margin-bottom: 20px; color: var(--text); }
 .chart-container-native { display: flex; height: 180px; gap: 10px; }
 .y-axis { display: flex; flex-direction: column; justify-content: space-between; font-size: 10px; color: var(--text3); text-align: right; padding-right: 5px; border-right: 1px solid var(--border-focus); width: 45px; flex-shrink: 0; }
 .bars-wrapper { display: flex; justify-content: space-around; align-items: flex-end; flex: 1; padding-bottom: 1px; border-bottom: 1px solid var(--border-focus); }
 .bar-group { display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; justify-content: flex-end; gap: 4px; }
 .bar-value { font-size: 10px; color: var(--text2); font-weight: 600; }
-.bar-track { width: 100%; max-width: 45px; flex: 1; display: flex; align-items: flex-end; justify-content: center; }
+.bar-track { width: 100%; max-width: 50px; flex: 1; display: flex; align-items: flex-end; justify-content: center; }
 .bar-fill { width: 100%; background: var(--primary); border-radius: 4px 4px 0 0; transition: height 0.8s ease-out; box-shadow: inset 0 -2px 0 rgba(0,0,0,0.1); }
-.bar-label { font-size: 11px; font-weight: 600; text-align: center; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70px; margin-top: 4px; }
+.bar-label { font-size: 11px; font-weight: 600; text-align: center; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80px; margin-top: 4px; }
 
+/* DIALOG */
 .overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(2px); display: none; justify-content: center; align-items: center; z-index: 100; }
 .overlay.active { display: flex; }
 .dialog { background: var(--surface); width: 400px; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); overflow: hidden; display: flex; flex-direction: column; transition: background 0.3s; }
@@ -122,8 +126,47 @@ tr:hover td { background: var(--surface-hover); }
 .multi-select-container { display: flex; flex-direction: column; gap: 8px; max-height: 120px; overflow-y: auto; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px; }
 .checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); cursor: pointer; }
 .checkbox-label input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary); }
-.analysis-section-title { font-size: 15px; font-weight: 600; color: var(--primary); margin: 24px 0 12px 0; padding-bottom: 6px; border-bottom: 2px dashed var(--border); }
-.analysis-section-title:first-child { margin-top: 0; }
+
+/* STYLE UNTUK SETIAP BLOK LAPORAN */
+.report-block { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 20px; position: relative; }
+.report-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed var(--border); padding-bottom: 10px; margin-bottom: 15px; }
+.report-title { font-size: 16px; font-weight: 600; color: var(--primary); margin: 0; }
+.remove-block-btn { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 16px; font-weight: bold; }
+.remove-block-btn:hover { color: red; }
+
+/* =========================================
+   PRINT CSS (EKSPOR KE PDF)
+   ========================================= */
+@media print {
+  body { background: #fff !important; color: #000 !important; overflow: visible !important; height: auto !important; }
+  header, .sidebar, .tabs, .view-area, .result-header button, .overlay, .remove-block-btn, #btn-clear-report { display: none !important; }
+  .main-container, .workspace { overflow: visible !important; display: block !important; }
+  
+  .result-panel { 
+    position: static !important; width: 100% !important; transform: none !important; 
+    box-shadow: none !important; border: none !important; display: block !important; 
+    background: #fff !important; color: #000 !important; 
+  }
+  .result-header { padding: 0 0 20px 0; border-bottom: 2px solid #000; background: transparent !important; }
+  .result-title { font-size: 24px; color: #000 !important; }
+  .result-body { padding: 20px 0; overflow: visible !important; }
+  
+  .report-block { border: none !important; padding: 0 !important; margin-bottom: 40px !important; background: transparent !important; page-break-inside: avoid; }
+  .report-header { border-bottom: 2px solid #000 !important; margin-bottom: 15px !important; padding-bottom: 5px !important; }
+  .report-title { font-size: 18px !important; color: #000 !important; }
+  
+  .stat-box { border: 1px solid #ccc !important; background: #fff !important; break-inside: avoid; }
+  .stat-box .value, .stat-box .label { color: #000 !important; }
+  .res-table th { background: #f0f0f0 !important; color: #000 !important; border-bottom: 1px solid #000 !important; }
+  .res-table td { color: #000 !important; border-bottom: 1px solid #ccc !important; }
+  .native-chart-card { break-inside: avoid; border: 1px solid #ccc !important; background: #fff !important; }
+  
+  .r-note { background: #f9f9f9 !important; border-left: 4px solid #000 !important; color: #000 !important; break-inside: avoid; }
+  .verdict { border: 1px solid #000 !important; background: #fff !important; color: #000 !important; break-inside: avoid;}
+  
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  @page { margin: 2cm; size: A4 portrait; }
+}
 </style>
 </head>
 <body>
@@ -133,7 +176,7 @@ tr:hover td { background: var(--surface-hover); }
   <div class="header-actions">
     <button class="btn btn-outline" id="theme-btn" onclick="toggleTheme()">☀️ Mode Terang</button>
     <button class="btn btn-outline" onclick="loadSampleData()">📂 Data Sampel</button>
-    <button class="btn btn-outline" style="color:var(--danger)" onclick="clearAll()">🗑️ Bersihkan</button>
+    <button class="btn btn-outline" style="color:var(--danger)" onclick="clearAll()">🗑️ Bersihkan Data</button>
   </div>
 </header>
 
@@ -204,10 +247,16 @@ tr:hover td { background: var(--surface-hover); }
 
     <div class="result-panel" id="result-panel">
       <div class="result-header">
-        <div class="result-title" id="res-title">Hasil Analisis</div>
-        <button class="close-btn" onclick="closeResult()">×</button>
+        <div class="result-title" id="res-title">Laporan Analisis StatWise</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+            <button class="btn btn-outline" id="btn-clear-report" style="padding: 6px 10px; font-size: 12px; color:var(--danger)" onclick="clearReport()">🗑️ Reset Laporan</button>
+            <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="window.print()">🖨️ Ekspor PDF</button>
+            <button class="close-btn" onclick="closeResult()">×</button>
+        </div>
       </div>
-      <div class="result-body" id="res-body"></div>
+      <div class="result-body">
+        <div id="res-content-area"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -270,7 +319,16 @@ function clearAll() {
     { name: 'Perlakuan', type: 'nominal', role: 'factor', values: '' },
     { name: 'Hasil', type: 'scale', role: 'dep', values: '' }
   ];
-  closeResult(); renderAll();
+  clearReport();
+  renderAll();
+}
+
+// Fitur Baru: Menghapus laporan di panel
+function clearReport() {
+    document.getElementById('res-content-area').innerHTML = '';
+}
+function removeBlock(btn) {
+    btn.closest('.report-block').remove();
 }
 
 // ==========================================
@@ -417,7 +475,7 @@ function extractGroups(depIdx, facIdx) {
 }
 
 // ==========================================
-// ADVANCED MATH ENGINE (ULTIMATE PRECISION)
+// ADVANCED MATH ENGINE (COMPUTATIONAL STATS)
 // ==========================================
 const mean = a => a.reduce((s,v)=>s+v,0)/a.length;
 const variance = (a,s=true) => { const m=mean(a); return a.reduce((t,v)=>t+(v-m)**2,0)/(a.length-(s?1:0)); };
@@ -483,22 +541,10 @@ function gammaUpperReg(a, x) {
     }
 }
 
-function chiSquareSF(x, df) {
-    return x <= 0 ? 1 : gammaUpperReg(df/2, x/2);
-}
-
-function fPVal(f, df1, df2) {
-    if (f <= 0) return 1;
-    return betainc(df2 / (df2 + df1 * f), df2 / 2, df1 / 2);
-}
-
-function tDistPVal(t, df) {
-    return betainc(df / (df + t * t), df / 2, 0.5);
-}
-
-function normalPDF(x) {
-    return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
-}
+function chiSquareSF(x, df) { return x <= 0 ? 1 : gammaUpperReg(df/2, x/2); }
+function fPVal(f, df1, df2) { return f <= 0 ? 1 : betainc(df2 / (df2 + df1 * f), df2 / 2, df1 / 2); }
+function tDistPVal(t, df) { return betainc(df / (df + t * t), df / 2, 0.5); }
+function normalPDF(x) { return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI); }
 
 function normalCDF(x) {
     const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
@@ -516,66 +562,46 @@ function qnorm(p) {
     const q=Math.sqrt(-2*Math.log(1-p));return-(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
 }
 
-// Studentized Range Distribution P(Q >= q | k, df) — Gauss-Legendre 16-titik
+// Studentized Range Distribution P(Q >= q | k, df)
 function tukeyPVal(q, k, df) {
     if (q <= 0) return 1;
     if (!isFinite(q) || df <= 0) return 0;
-
     const GLX = [0.09501251,0.28160355,0.45801678,0.61787624,0.75540441,0.86563120,0.94457502,0.98940093];
     const GLW = [0.18945061,0.18260342,0.16915652,0.14959599,0.12462897,0.09515851,0.06225352,0.02715246];
-
     const logC = logGamma((df+1)/2) - logGamma(df/2) - 0.5*Math.log(Math.PI*df);
-    function tPDF(z) {
-        return Math.exp(logC - ((df+1)/2)*Math.log(1 + z*z/df));
-    }
-
+    function tPDF(z) { return Math.exp(logC - ((df+1)/2)*Math.log(1 + z*z/df)); }
     function integrand(z) {
         const d = normalCDF(z) - normalCDF(z - q);
         return d <= 0 ? 0 : tPDF(z) * Math.pow(d, k - 1);
     }
-
     function glSeg(a, b) {
         const mid = (a+b)/2, half = (b-a)/2;
         let s = 0;
-        for (let i = 0; i < GLX.length; i++)
-            s += GLW[i] * (integrand(mid + half*GLX[i]) + integrand(mid - half*GLX[i]));
+        for (let i = 0; i < GLX.length; i++) s += GLW[i] * (integrand(mid + half*GLX[i]) + integrand(mid - half*GLX[i]));
         return half * s;
     }
-
     const segs = [[-7,-4],[-4,-1],[-1,2],[2,5],[5,7]];
-    let cdf = 0;
-    for (const [a,b] of segs) cdf += glSeg(a, b);
-
+    let cdf = 0; for (const [a,b] of segs) cdf += glSeg(a, b);
     return Math.max(0.0001, Math.min(0.9999, 1 - k*cdf));
 }
 
-// ------------------------------------------
 // Core Tests
-// ------------------------------------------
 function shapiroWilk(data) {
     const x = [...data].sort((a,b) => a-b), n = x.length;
     if (n < 3) return { W: null, p: null };
-
     const m = x.map((_, i) => qnorm((i + 1 - 0.375) / (n + 0.25)));
     const mn = Math.sqrt(m.reduce((s, v) => s + v*v, 0));
     const a = m.map(v => v / mn);
-
     let b = 0;
     for (let i = 0; i < Math.floor(n/2); i++) b += a[n-1-i] * (x[n-1-i] - x[i]);
     const xm = mean(x), ss = x.reduce((s, v) => s + (v-xm)**2, 0);
-    
-    // SAFEGUARD: Identical data protection
-    if (ss <= 1e-10) return { W: 1, p: 0 };
-    
+    if (ss <= 1e-10) return { W: 1, p: 0 }; 
     const W = Math.min(Math.max((b*b)/ss, 1e-6), 1-1e-6);
-
     let mu, sig, y;
-
     if (n === 3) {
         const p3 = (6/Math.PI) * (Math.asin(Math.sqrt(W)) - Math.asin(Math.sqrt(0.75)));
         return { W, p: Math.max(0.0001, Math.min(0.9999, p3)) };
     }
-
     if (n <= 11) {
         mu  =  0.544  - 0.39978*n  + 0.025054*n*n  - 0.0006714*n*n*n;
         sig = Math.exp(1.3822  - 0.77857*n  + 0.062767*n*n  - 0.0020322*n*n*n);
@@ -586,7 +612,6 @@ function shapiroWilk(data) {
         sig = Math.exp(-1.669  + u*(-0.3655  + u* 0.04834));
         y   = Math.log(1 - W);
     }
-
     const z = (y - mu) / sig;
     return { W, p: Math.max(0.0001, Math.min(0.9999, 1 - normalCDF(z))) };
 }
@@ -595,163 +620,101 @@ function ksTest(data){const n=data.length,s=[...data].sort((a,b)=>a-b),m=mean(da
 function leveneTest(groups){const k=groups.length,allN=groups.map(g=>g.length),N=allN.reduce((a,b)=>a+b,0);const meds=groups.map(g=>median(g)),Z=groups.map((g,i)=>g.map(v=>Math.abs(v-meds[i])));const Zm=Z.map(z=>mean(z)),Zg=mean(Z.flat());const SSB=allN.reduce((acc,ni,i)=>acc+ni*(Zm[i]-Zg)**2,0);const SSW=Z.reduce((acc,z,i)=>acc+z.reduce((a,b)=>a+(b-Zm[i])**2,0),0);const df1=k-1,df2=N-k,F=(SSB/df1)/(SSW/df2);return{F,df1,df2,p:fPVal(F,df1,df2)};}
 function oneWayAnova(groups){const k=groups.length,allN=groups.map(g=>g.length),N=allN.reduce((a,b)=>a+b,0);const gm=mean(groups.flat()),gms=groups.map(g=>mean(g));const SSB=allN.reduce((acc,ni,i)=>acc+ni*(gms[i]-gm)**2,0);const SSW=groups.reduce((acc,g,i)=>acc+g.reduce((a,v)=>a+(v-gms[i])**2,0),0);const dfB=k-1,dfW=N-k,MSB=SSB/dfB,MSW=SSW/dfW,F=MSB/MSW;return{F,dfB,dfW,p:fPVal(F,dfB,dfW),SSB,SSW,SST:SSB+SSW,MSB,MSW,eta2:SSB/(SSB+SSW),groupMeans:gms};}
 
-// Two-Way ANOVA (Unweighted Means Approximation for robustness)
 function twoWayAnova(depIdx, fac1Idx, fac2Idx) {
     let cells = {}, levels1 = new Set(), levels2 = new Set(), N = 0;
     let ySqTotal = 0, yTotal = 0;
-    
     for(let r=0; r<S.rows; r++) {
         let y = parseFloat(String(S.data[r][depIdx]).replace(',','.'));
         let f1 = S.data[r][fac1Idx], f2 = S.data[r][fac2Idx];
         if(isNaN(y) || f1==='' || f1===undefined || f2==='' || f2===undefined) continue;
-        
-        f1 = getMappedLabel(fac1Idx, f1);
-        f2 = getMappedLabel(fac2Idx, f2);
-        
+        f1 = getMappedLabel(fac1Idx, f1); f2 = getMappedLabel(fac2Idx, f2);
         levels1.add(f1); levels2.add(f2);
         let key = f1 + '|' + f2;
         if(!cells[key]) cells[key] = [];
         cells[key].push(y);
         N++; yTotal += y; ySqTotal += y*y;
     }
-    
-    let L1 = Array.from(levels1).sort();
-    let L2 = Array.from(levels2).sort();
+    let L1 = Array.from(levels1).sort(), L2 = Array.from(levels2).sort();
     let a = L1.length, b = L2.length;
     if(a < 2 || b < 2) return null; 
-    
-    let CM = (yTotal**2) / N;
-    let SST = ySqTotal - CM;
-    
+    let CM = (yTotal**2) / N, SST = ySqTotal - CM;
     let yA = {}, nA = {}; let yB = {}, nB = {};
-    L1.forEach(l => { yA[l]=0; nA[l]=0; });
-    L2.forEach(l => { yB[l]=0; nB[l]=0; });
-    
+    L1.forEach(l => { yA[l]=0; nA[l]=0; }); L2.forEach(l => { yB[l]=0; nB[l]=0; });
     let SSAB_sub = 0, SSE = 0;
     for(let f1 of L1) {
         for(let f2 of L2) {
-            let key = f1 + '|' + f2;
-            let c = cells[key] || [];
-            let n_ij = c.length;
+            let c = cells[f1 + '|' + f2] || []; let n_ij = c.length;
             if(n_ij > 0) {
                 let sum_ij = c.reduce((s,v)=>s+v, 0);
-                yA[f1] += sum_ij; nA[f1] += n_ij;
-                yB[f2] += sum_ij; nB[f2] += n_ij;
+                yA[f1] += sum_ij; nA[f1] += n_ij; yB[f2] += sum_ij; nB[f2] += n_ij;
                 SSAB_sub += (sum_ij**2) / n_ij;
                 let mean_ij = sum_ij / n_ij;
                 SSE += c.reduce((s,v)=>s+(v-mean_ij)**2, 0);
             }
         }
     }
-    
     let SSA = 0; for(let l of L1) SSA += (yA[l]**2)/nA[l]; SSA -= CM;
     let SSB = 0; for(let l of L2) SSB += (yB[l]**2)/nB[l]; SSB -= CM;
     let SSAB = SSAB_sub - CM - SSA - SSB;
-    
     let dfA = a - 1, dfB = b - 1, dfAB = (a-1)*(b-1), dfE = N - a*b;
     let MSA = SSA/dfA, MSB = SSB/dfB, MSAB = SSAB/dfAB, MSE = SSE/dfE;
     let FA = MSA/MSE, FB = MSB/MSE, FAB = MSAB/MSE;
-    
     return { SSA, SSB, SSAB, SSE, SST, dfA, dfB, dfAB, dfE, MSA, MSB, MSAB, MSE, 
-             FA, FB, FAB, pA: fPVal(FA, dfA, dfE), pB: fPVal(FB, dfB, dfE), pAB: fPVal(FAB, dfAB, dfE) };
+             FA, FB, FAB, pA: fPVal(FA, dfA, dfE), pB: fPVal(FB, dfB, dfE), pAB: fPVal(FAB, dfAB, dfE), L1, L2 };
 }
 
-// Kruskal-Wallis with Tie Correction Extreme Safeguard
 function kruskalWallis(groups){
     const allVals=groups.flatMap((g,i)=>g.map(v=>({v,g:i})));
     allVals.sort((a,b)=>a.v-b.v);
-    
-    let rank=1;
-    let tieSum = 0; 
-    
+    let rank=1, tieSum = 0; 
     for(let i=0;i<allVals.length;){
-        let j=i;
-        while(j<allVals.length && allVals[j].v===allVals[i].v) j++;
-        const t = j - i;
-        if(t > 1) tieSum += (Math.pow(t, 3) - t); 
-        
+        let j=i; while(j<allVals.length && allVals[j].v===allVals[i].v) j++;
+        const t = j - i; if(t > 1) tieSum += (Math.pow(t, 3) - t); 
         const avgRank=(rank+rank+j-i-1)/2;
         for(let k=i;k<j;k++) allVals[k].rank=avgRank;
         rank += t; i=j;
     }
-    
     const N=allVals.length;
     const rankSums=groups.map((_,i)=>allVals.filter(x=>x.g===i).reduce((s,x)=>s+x.rank,0));
-    
     let H=12/(N*(N+1))*groups.reduce((s,g,i)=>s+rankSums[i]**2/g.length,0)-3*(N+1);
-    
-    // SAFEGUARD: All values identical
     const tieAdj = 1 - tieSum / (Math.pow(N, 3) - N);
     if(tieAdj > 1e-10) H = H / tieAdj; else H = 0;
-    
     const df=groups.length-1;
-    const p=chiSquareSF(H, df);
-    
-    return{H,df,p:Math.max(0,Math.min(1,p)),rankSums,meanRanks:groups.map((g,i)=>rankSums[i]/g.length)};
+    return{H,df,p:Math.max(0,Math.min(1,chiSquareSF(H, df))),rankSums,meanRanks:groups.map((g,i)=>rankSums[i]/g.length)};
 }
 
-// Mann-Whitney U dengan koreksi ties & Z-Score sign recovery
 function mannWhitney(g1, g2, tail) {
     const n1 = g1.length, n2 = g2.length, N = n1 + n2;
     const all = [...g1.map(v=>({v,g:1})), ...g2.map(v=>({v,g:2}))];
     all.sort((a,b) => a.v - b.v);
-
     let r = 1, tieSum = 0;
     for (let i = 0; i < all.length;) {
-        let j = i;
-        while (j < all.length && all[j].v === all[i].v) j++;
-        const t = j - i;
-        if (t > 1) tieSum += t*t*t - t;
+        let j = i; while (j < all.length && all[j].v === all[i].v) j++;
+        const t = j - i; if (t > 1) tieSum += t*t*t - t;
         const avg = (r + r + t - 1) / 2;
         for (let k = i; k < j; k++) all[k].rank = avg;
         r += t; i = j;
     }
-
     const R1 = all.filter(x=>x.g===1).reduce((s,x)=>s+x.rank, 0);
     const R2 = all.filter(x=>x.g===2).reduce((s,x)=>s+x.rank, 0);
-    const U1 = R1 - n1*(n1+1)/2;
-    const U2 = n2*n1 - U1;
-    const meanU = n1*n2/2;
-
+    const U1 = R1 - n1*(n1+1)/2, U2 = n2*n1 - U1, U = Math.min(U1,U2), meanU = n1*n2/2;
     const varU = (n1*n2/12) * ((N+1) - tieSum/(N*(N-1)));
     const sdU  = Math.sqrt(Math.max(varU, 0));
-
-    // Sign Recovery & Continuity
     let Z_num = U1 - meanU;
-    if (Z_num > 0) Z_num -= 0.5;
-    else if (Z_num < 0) Z_num += 0.5;
-    
+    if (Z_num > 0) Z_num -= 0.5; else if (Z_num < 0) Z_num += 0.5;
     const z = sdU > 1e-10 ? Z_num / sdU : 0;
-
     let p;
-    if (tail === 'two')  p = 2 * normalCDF(-Math.abs(z));
-    else if (tail === 'left')  p = normalCDF(z);
-    else                       p = 1 - normalCDF(z);
-
-    return { U1, U2, U: Math.min(U1,U2), z,
-             p: Math.max(0, Math.min(p, 1)),
-             R1, R2, n1, n2, tiesCorrected: tieSum > 0 };
+    if (tail === 'two') p = 2 * normalCDF(-Math.abs(z));
+    else if (tail === 'left') p = normalCDF(z);
+    else p = 1 - normalCDF(z);
+    return { U1, U2, U, z, p: Math.max(0, Math.min(p, 1)), R1, R2, n1, n2, tiesCorrected: tieSum > 0 };
 }
 
-function skewness(a) {
-    const n = a.length, m = mean(a), s = std(a);
-    if (s === 0 || n < 3) return 0;
-    return (n / ((n-1)*(n-2))) * a.reduce((t,v) => t + ((v-m)/s)**3, 0);
-}
-function kurtosis(a) {
-    const n = a.length, m = mean(a), s = std(a);
-    if (s === 0 || n < 4) return 0;
-    const g2 = a.reduce((t,v) => t + ((v-m)/s)**4, 0);
-    return ((n*(n+1))/((n-1)*(n-2)*(n-3)))*g2 - 3*(n-1)**2/((n-2)*(n-3));
-}
+function skewness(a) { const n=a.length,m=mean(a),s=std(a); if(s===0||n<3) return 0; return (n/((n-1)*(n-2))) * a.reduce((t,v) => t + ((v-m)/s)**3, 0); }
+function kurtosis(a) { const n=a.length,m=mean(a),s=std(a); if(s===0||n<4) return 0; const g2=a.reduce((t,v) => t + ((v-m)/s)**4, 0); return ((n*(n+1))/((n-1)*(n-2)*(n-3)))*g2 - 3*(n-1)**2/((n-2)*(n-3)); }
 function tInv(alpha2, df) { 
-    if(df <= 0) return NaN;
-    let lo = 0, hi = 1e4;
-    for (let i = 0; i < 70; i++) {
-        const mid = (lo+hi)/2;
-        tDistPVal(mid, df) > alpha2 ? lo = mid : hi = mid;
-    }
-    return (lo+hi)/2;
+    if(df <= 0) return NaN; let lo = 0, hi = 1e4;
+    for (let i = 0; i < 70; i++) { const mid = (lo+hi)/2; tDistPVal(mid, df) > alpha2 ? lo = mid : hi = mid; } return (lo+hi)/2;
 }
 
 // ------------------------------------------
@@ -778,12 +741,11 @@ function calcPostHoc(groups, names, alpha) {
             let se_q = Math.sqrt(MSW * 0.5 * (1/n1 + 1/n2));
             let q = diffAbs / se_q;
             let p_tukey = tukeyPVal(q, k, dfW);
-            
             let p_dist = j - i + 1; 
             let p_duncan = tukeyPVal(q, p_dist, dfW); 
 
             pairs.push({
-                a: names[u], b: names[v], diff: m1 - m2, 
+                a: names[u], b: names[v], diff: m1 - m2,
                 p_lsd: p_lsd, sig_lsd: p_lsd <= alpha,
                 p_bonf: p_bonf, sig_bonf: p_bonf <= alpha,
                 p_tukey: p_tukey, sig_tukey: p_tukey <= alpha,
@@ -794,11 +756,9 @@ function calcPostHoc(groups, names, alpha) {
     return { pairs, sortedIdx };
 }
 
-// Compact Letter Display — Piepho (2004) sweep algorithm
 function getLetters(names, means, pairs, sigKey) {
     const n = names.length;
     const sortedIdx = means.map((_, i) => i).sort((a,b) => means[a] - means[b]);
-
     const sig = Array.from({length:n}, () => Array(n).fill(false));
     pairs.forEach(p => {
         const i = names.indexOf(p.a), j = names.indexOf(p.b);
@@ -807,7 +767,6 @@ function getLetters(names, means, pairs, sigKey) {
 
     let letters = Array.from({length:n}, () => new Set(['a']));
     let nextChar = 'b';
-
     let changed = true;
     while (changed) {
         changed = false;
@@ -819,8 +778,7 @@ function getLetters(names, means, pairs, sigKey) {
                 for (const c of shared) {
                     const hi = means[i] >= means[j] ? i : j;
                     const lo = hi === i ? j : i;
-                    letters[hi].delete(c);
-                    letters[hi].add(nextChar);
+                    letters[hi].delete(c); letters[hi].add(nextChar);
                     for (let k = 0; k < n; k++) {
                         if (k === hi) continue;
                         if (!sig[hi][k] && letters[k].has(c)) letters[k].add(nextChar);
@@ -853,10 +811,10 @@ function drawBarChart(labels, data, title, letters = null) {
     let heightPct = Math.max(0, (data[i] / maxVal) * 100);
     if(heightPct < 1 && data[i] > 0) heightPct = 1; 
     let valText = fmt(data[i]);
-    if (letters) valText += ` <span class="notation-b">(${letters[i]})</span>`;
+    if (letters) valText += ` <br><span class="notation-b">(${letters[i]})</span>`;
 
     html += `       <div class="bar-group">
-                      <div class="bar-value">${valText}</div>
+                      <div class="bar-value" style="text-align:center;">${valText}</div>
                       <div class="bar-track">
                         <div class="bar-fill" style="height:${heightPct}%;"></div>
                       </div>
@@ -871,7 +829,7 @@ function drawBarChart(labels, data, title, letters = null) {
 }
 
 // ==========================================
-// UI DIALOGS & RUNNERS
+// UI DIALOGS & RUNNERS (ACCUMULATIVE REPORT)
 // ==========================================
 
 function getFilteredOptions(typeFilter) {
@@ -921,7 +879,7 @@ function openDialog(type) {
   } else if (type === 'normalitas') {
     dlgTitle.textContent = '🔔 Uji Normalitas';
     html += depSelector;
-    html += `<div class="form-group"><label>Berdasarkan Kelompok? (Opsional, seperti SPSS)</label><select class="form-control" id="dlg-fac"><option value="-1">— Secara Keseluruhan (Tanpa Grup) —</option>${getFilteredOptions('nominal')}</select></div>`;
+    html += `<div class="form-group"><label>Berdasarkan Kelompok? (Opsional)</label><select class="form-control" id="dlg-fac"><option value="-1">— Secara Keseluruhan (Tanpa Grup) —</option>${getFilteredOptions('nominal')}</select></div>`;
     html += `<div class="form-group"><label>Tingkat Signifikansi (α)</label><select class="form-control" id="dlg-alpha"><option value="0.05" selected>0.05</option><option value="0.01">0.01</option></select></div>`;
     dlgBtn.onclick = () => runNormalitas();
   } else if (type === 'homogenitas') {
@@ -975,21 +933,35 @@ function openDialog(type) {
 
 function closeDialog() { document.getElementById('dialog-overlay').classList.remove('active'); }
 function closeResult() { document.getElementById('result-panel').classList.remove('open'); }
-function showResult(title, html) {
-  document.getElementById('res-title').textContent = title;
+
+// FUNGSI BARU: Menambahkan Hasil Tanpa Menghapus yang Lama
+function appendToReport(title, htmlContent) {
+  const reportArea = document.getElementById('res-content-area');
+  const block = document.createElement('div');
+  block.className = 'report-block';
+  block.innerHTML = `
+    <div class="report-header">
+      <h3 class="report-title">${title}</h3>
+      <button class="remove-block-btn" onclick="removeBlock(this)" title="Hapus dari laporan">✖</button>
+    </div>
+    ${htmlContent}
+  `;
+  reportArea.appendChild(block);
+  
+  // Buka panel dan scroll ke bawah agar hasil terbaru terlihat
   const panel = document.getElementById('result-panel');
   panel.classList.add('open');
-  
   setTimeout(() => {
-    document.getElementById('res-body').innerHTML = html;
-    setTimeout(() => {
-      const bars = document.querySelectorAll('.bar-fill');
-      bars.forEach(bar => {
-        const h = bar.style.height;
-        bar.style.height = '0%'; 
-        setTimeout(() => { bar.style.height = h; }, 50); 
-      });
-    }, 50);
+    const body = document.querySelector('.result-body');
+    body.scrollTo({ top: body.scrollHeight, behavior: 'smooth' });
+    
+    // Animasi chart
+    const bars = block.querySelectorAll('.bar-fill');
+    bars.forEach(bar => {
+      const h = bar.style.height;
+      bar.style.height = '0%'; 
+      setTimeout(() => { bar.style.height = h; }, 50); 
+    });
   }, 100);
 }
 
@@ -1000,12 +972,11 @@ function runDeskriptif() {
   let fullHtml = '';
 
   deps.forEach(vIdx => {
-    fullHtml += `<div class="analysis-section-title">Variabel: ${S.vars[vIdx].name}</div>`;
+    fullHtml += `<div style="font-weight:bold; margin-bottom:8px;">Variabel: ${S.vars[vIdx].name}</div>`;
     const d = S.data.map(r => parseFloat(String(r[vIdx]).replace(',','.'))).filter(v => !isNaN(v));
     if (d.length === 0) { fullHtml += `<div class="r-alert">Data kosong atau tidak valid.</div>`; return; }
 
-    const n = d.length;
-    const m = mean(d), s = std(d), se = s / Math.sqrt(n);
+    const n = d.length, m = mean(d), s = std(d), se = s / Math.sqrt(n);
     const med = median(d), mn = Math.min(...d), mx = Math.max(...d);
     const sk = skewness(d), ku = kurtosis(d);
     const tc = n > 1 ? tInv(0.05, n - 1) : 0;
@@ -1016,24 +987,20 @@ function runDeskriptif() {
       <div class="stat-box"><div class="label">Mean</div><div class="value">${fmt(m)}</div></div>
       <div class="stat-box"><div class="label">Median</div><div class="value">${fmt(med)}</div></div>
       <div class="stat-box"><div class="label">Std. Deviasi</div><div class="value">${fmt(s)}</div></div>
-      <div class="stat-box"><div class="label">Std. Error</div><div class="value">${fmt(se)}</div></div>
       <div class="stat-box"><div class="label">Minimum</div><div class="value">${fmt(mn)}</div></div>
       <div class="stat-box"><div class="label">Maksimum</div><div class="value">${fmt(mx)}</div></div>
-      <div class="stat-box"><div class="label">Range</div><div class="value">${fmt(mx - mn)}</div></div>
     </div>
     <table class="res-table">
       <thead><tr><th>Statistik Tambahan</th><th>Nilai</th><th>Keterangan</th></tr></thead>
       <tbody>
-        <tr><td>Varians (S²)</td><td>${fmt(s*s)}</td><td>—</td></tr>
-        <tr><td>Skewness</td><td>${fmt(sk)}</td>
-            <td>${Math.abs(sk)<0.5?'Distribusi simetris':sk>1||sk<-1?'Sangat menceng':'Agak menceng'} (${sk>=0?'kanan/positif':'kiri/negatif'})</td></tr>
-        <tr><td>Kurtosis (excess)</td><td>${fmt(ku)}</td>
-            <td>${Math.abs(ku)<0.5?'Mesokurtik (≈ normal)':ku>0?'Leptokurtik (runcing)':'Platikurtik (datar)'}</td></tr>
+        <tr><td>Std. Error Mean</td><td>${fmt(se)}</td><td>—</td></tr>
+        <tr><td>Skewness</td><td>${fmt(sk)}</td><td>${Math.abs(sk)<0.5?'Distribusi simetris':sk>1||sk<-1?'Sangat menceng':'Agak menceng'}</td></tr>
+        <tr><td>Kurtosis (excess)</td><td>${fmt(ku)}</td><td>${Math.abs(ku)<0.5?'Mesokurtik (≈ normal)':ku>0?'Leptokurtik (runcing)':'Platikurtik (datar)'}</td></tr>
         <tr><td>95% CI untuk Mean</td><td>[${fmt(ci_lo)}, ${fmt(ci_hi)}]</td><td>Interval kepercayaan populasi</td></tr>
       </tbody>
-    </table>`;
+    </table><hr style="border-top:1px dashed var(--border); margin:20px 0;">`;
   });
-  showResult('Statistik Deskriptif', fullHtml);
+  appendToReport('Statistik Deskriptif', fullHtml);
 }
 
 function runNormalitas() {
@@ -1045,14 +1012,11 @@ function runNormalitas() {
   let fullHtml = '';
   
   deps.forEach(vIdx => {
-    fullHtml += `<div class="analysis-section-title">Variabel: ${S.vars[vIdx].name}</div>`;
-    
+    fullHtml += `<div style="font-weight:bold; margin-bottom:8px;">Variabel: ${S.vars[vIdx].name}</div>`;
     if(facIdx !== -1) {
         const { groups, names } = extractGroups(vIdx, facIdx);
         let tbl = `<table class="res-table"><thead><tr><th>Kelompok</th><th>Metode</th><th>Statistik</th><th>p-value</th></tr></thead><tbody>`;
-        let allNormal = true;
-        let validGroups = 0;
-        
+        let allNormal = true, validGroups = 0;
         groups.forEach((g, i) => {
             if (g.length < 3) return; 
             validGroups++;
@@ -1062,27 +1026,29 @@ function runNormalitas() {
             tbl += `<tr><td>K-S</td><td>${fmt(ks.D)}</td><td class="${ks.p>alpha?'':'sig'}">${fmtp(ks.p)}</td></tr>`;
         });
         tbl += `</tbody></table>`;
-        
-        if (validGroups === 0) {
-            fullHtml += `<div class="r-alert">Grup tidak memiliki data yang cukup (minimal n=3 per grup).</div>`;
-        } else {
+        if (validGroups === 0) { fullHtml += `<div class="r-alert">Grup tidak memiliki data yang cukup (minimal n=3 per grup).</div>`; } 
+        else {
             fullHtml += tbl;
-            fullHtml += `<div class="r-note"><b>Saran Lanjutan:</b><br>${allNormal ? 'Semua kelompok berdistribusi normal, asumsi klasik untuk ANOVA terpenuhi.' : 'Ada kelompok yang tidak normal, pertimbangkan transformasi data atau Kruskal-Wallis.'}</div>`;
+            let interpret = allNormal ? 
+                `Berdasarkan uji normalitas Shapiro-Wilk (Royston, 1992), seluruh kelompok pada variabel <b>${S.vars[vIdx].name}</b> berdistribusi normal karena p-value > ${alpha}. Asumsi normalitas data terpenuhi.` : 
+                `Terdapat satu atau lebih kelompok pada variabel <b>${S.vars[vIdx].name}</b> yang tidak berdistribusi normal (p-value ≤ ${alpha}). Asumsi normalitas dilanggar.`;
+            fullHtml += `<div class="r-note"><b>Interpretasi:</b><br>${interpret}</div><hr style="border-top:1px dashed var(--border); margin:20px 0;">`;
         }
-    } 
-    else {
+    } else {
         const d = S.data.map(r => parseFloat(String(r[vIdx]).replace(',','.'))).filter(v => !isNaN(v));
         if(d.length < 3) { fullHtml += `<div class="r-alert">Butuh minimal 3 data valid.</div>`; return; }
-        
         const sw = shapiroWilk(d), ks = ksTest(d), pass = sw.p > alpha;
         fullHtml += `<div class="verdict ${pass?'v-pass':'v-fail'}">${pass ? '✅ Data Normal (H₀ diterima)' : '❌ Data Tidak Normal (H₀ ditolak)'}</div>
                     <table class="res-table"><thead><tr><th>Metode Uji</th><th>Statistik</th><th>p-value</th></tr></thead><tbody>
                     <tr><td>Shapiro-Wilk</td><td>${fmt(sw.W)}</td><td class="${pass?'':'sig'}">${fmtp(sw.p)}</td></tr>
                     <tr><td>Kolmogorov-Smirnov</td><td>${fmt(ks.D)}</td><td>${fmtp(ks.p)}</td></tr></tbody></table>`;
-        fullHtml += `<div class="r-note"><b>Saran Lanjutan:</b><br>${pass ? 'Karena data normal, Anda dapat melanjutkan dengan uji parametrik.' : 'Karena data tidak normal, disarankan menggunakan uji non-parametrik.'}</div>`;
+        let interpret = pass ? 
+            `Berdasarkan uji normalitas Shapiro-Wilk, data pada variabel <b>${S.vars[vIdx].name}</b> berdistribusi normal (p = ${fmtp(sw.p)} > ${alpha}). Anda dapat menggunakan statistik parametrik.` : 
+            `Berdasarkan uji normalitas Shapiro-Wilk, data pada variabel <b>${S.vars[vIdx].name}</b> tidak berdistribusi normal (p = ${fmtp(sw.p)} ≤ ${alpha}). Disarankan menggunakan statistik non-parametrik.`;
+        fullHtml += `<div class="r-note"><b>Interpretasi:</b><br>${interpret}</div><hr style="border-top:1px dashed var(--border); margin:20px 0;">`;
     }
   });
-  showResult('Uji Normalitas', fullHtml);
+  appendToReport('Uji Normalitas', fullHtml);
 }
 
 function runHomogenitas() {
@@ -1094,7 +1060,7 @@ function runHomogenitas() {
   let fullHtml = '';
   
   deps.forEach(depIdx => {
-    fullHtml += `<div class="analysis-section-title">Variabel: ${S.vars[depIdx].name}</div>`;
+    fullHtml += `<div style="font-weight:bold; margin-bottom:8px;">Variabel: ${S.vars[depIdx].name}</div>`;
     if(depIdx === facIdx) { fullHtml += `<div class="r-alert">Variabel Y dan X tidak boleh sama.</div>`; return; }
     
     const { groups } = extractGroups(depIdx, facIdx);
@@ -1106,13 +1072,12 @@ function runHomogenitas() {
                 <div class="stat-grid"><div class="stat-box"><div class="label">F (Levene)</div><div class="value">${fmt(r.F)}</div></div>
                 <div class="stat-box"><div class="label">df1 / df2</div><div class="value">${r.df1} / ${r.df2}</div></div>
                 <div class="stat-box"><div class="label">p-value</div><div class="value ${pass?'':'sig'}">${fmtp(r.p)}</div></div></div>`;
-    fullHtml += `<div class="r-note">
-      Metode: <b>Levene (berdasarkan Median) / Brown-Forsythe</b>.<br>
-      <b>Saran Lanjutan:</b><br>
-      ${pass ? 'Varians homogen, asumsi klasik terpenuhi. Gunakan <b>One-Way ANOVA</b>.' : 'Varians tidak homogen, pertimbangkan <b>Kruskal-Wallis</b>.'}
-    </div>`;
+    let interpret = pass ? 
+        `Berdasarkan Uji Levene (Brown-Forsythe), varians dari variabel <b>${S.vars[depIdx].name}</b> antar kelompok bersifat homogen (F(${r.df1}, ${r.df2}) = ${fmt(r.F)}, p = ${fmtp(r.p)} > ${alpha}). Asumsi homogenitas varians terpenuhi.` : 
+        `Berdasarkan Uji Levene (Brown-Forsythe), varians dari variabel <b>${S.vars[depIdx].name}</b> antar kelompok tidak homogen (F(${r.df1}, ${r.df2}) = ${fmt(r.F)}, p = ${fmtp(r.p)} ≤ ${alpha}). Asumsi homogenitas varians tidak terpenuhi.`;
+    fullHtml += `<div class="r-note"><b>Interpretasi:</b><br>${interpret}</div><hr style="border-top:1px dashed var(--border); margin:20px 0;">`;
   });
-  showResult('Uji Homogenitas', fullHtml);
+  appendToReport('Uji Homogenitas (Levene)', fullHtml);
 }
 
 function runAnova1() {
@@ -1124,7 +1089,7 @@ function runAnova1() {
   let fullHtml = '';
   
   deps.forEach(depIdx => {
-    fullHtml += `<div class="analysis-section-title">Analisis: ${S.vars[depIdx].name}</div>`;
+    fullHtml += `<div style="font-weight:bold; margin-bottom:8px;">Analisis: ${S.vars[depIdx].name}</div>`;
     if(depIdx === facIdx) { fullHtml += `<div class="r-alert">Variabel Y dan X tidak boleh sama.</div>`; return; }
     
     const { groups, names } = extractGroups(depIdx, facIdx);
@@ -1138,7 +1103,6 @@ function runAnova1() {
     fullHtml += `<div class="verdict ${pass?'v-fail':'v-pass'}">${pass ? `✅ Ada perbedaan signifikan (p ≤ ${alpha})` : `❌ Tidak ada perbedaan signifikan (p > ${alpha})`}</div>
                 <div class="stat-grid">
                   <div class="stat-box"><div class="label">F-Statistik</div><div class="value">${fmt(r.F)}</div></div>
-                  <div class="stat-box"><div class="label">F-Kritis</div><div class="value">${fmt(fCrit)}</div></div>
                   <div class="stat-box"><div class="label">p-value</div><div class="value ${pass?'sig':''}">${fmtp(r.p)}</div></div>
                   <div class="stat-box"><div class="label">η² (Eta²)</div><div class="value">${fmt(r.eta2)}</div></div>
                   <div class="stat-box"><div class="label">ω² (Omega²)</div><div class="value">${fmt(omega2)}</div></div>
@@ -1151,50 +1115,13 @@ function runAnova1() {
                     <tr><td><b>Total</b></td><td>${fmt(r.SST)}</td><td>${r.dfB+r.dfW}</td><td>—</td><td>—</td><td>—</td></tr>
                   </tbody>
                 </table>`;
-                
     fullHtml += drawBarChart(vN, r.groupMeans, `Rata-rata ${S.vars[depIdx].name} per Kelompok`);
-    
-    fullHtml += `<div class="r-note">
-      <b>Saran Lanjutan:</b><br>
-      ${pass ? 'ANOVA <b>Signifikan</b>. Lanjutkan ke menu <b>Uji Post Hoc</b> untuk pemberian notasi huruf (a, b, c).' : 'ANOVA <b>Tidak Signifikan</b>. Hal ini berarti rata-rata antar kelompok secara statistik sama.'}
-    </div>`;
+    let interpret = pass ? 
+        `Uji One-Way ANOVA menunjukkan bahwa terdapat perbedaan rata-rata yang signifikan secara statistik pada variabel <b>${S.vars[depIdx].name}</b> antar kelompok perlakuan (F(${r.dfB}, ${r.dfW}) = ${fmt(r.F)}, p = ${fmtp(r.p)} ≤ ${alpha}). Disarankan melanjutkan ke uji Post Hoc.` : 
+        `Uji One-Way ANOVA menunjukkan bahwa tidak terdapat perbedaan rata-rata yang signifikan pada variabel <b>${S.vars[depIdx].name}</b> antar kelompok perlakuan (F(${r.dfB}, ${r.dfW}) = ${fmt(r.F)}, p = ${fmtp(r.p)} > ${alpha}).`;
+    fullHtml += `<div class="r-note"><b>Interpretasi:</b><br>${interpret}</div><hr style="border-top:1px dashed var(--border); margin:20px 0;">`;
   });
-  showResult('One-Way ANOVA', fullHtml);
-}
-
-function runAnova2() {
-  const deps = getSelectedDeps('dlg-dep-container');
-  const fac1Idx = parseInt(document.getElementById('dlg-fac1').value);
-  const fac2Idx = parseInt(document.getElementById('dlg-fac2').value);
-  const alpha = parseFloat(document.getElementById('dlg-alpha').value);
-  if(deps.length === 0) return alert('Pilih minimal 1 variabel dependen.');
-  if(fac1Idx === fac2Idx) return alert('Faktor A dan Faktor B harus berbeda.');
-  closeDialog();
-  let fullHtml = '';
-  
-  deps.forEach(depIdx => {
-    fullHtml += `<div class="analysis-section-title">Two-Way ANOVA: ${S.vars[depIdx].name}</div>`;
-    if(depIdx === fac1Idx || depIdx === fac2Idx) { fullHtml += `<div class="r-alert">Variabel Y dan X tidak boleh sama.</div>`; return; }
-    
-    const r = twoWayAnova(depIdx, fac1Idx, fac2Idx);
-    if(!r) { fullHtml += `<div class="r-alert">Gagal menghitung. Pastikan data kombinasi antar level faktor mencukupi.</div>`; return; }
-    
-    const passA = r.pA <= alpha, passB = r.pB <= alpha, passAB = r.pAB <= alpha;
-    
-    fullHtml += `<div class="verdict ${passAB?'v-fail':'v-pass'}">${passAB ? `⚠️ Ada efek interaksi yang Signifikan (p ≤ ${alpha}). Analisis efek utama harus hati-hati.` : `✅ Tidak ada efek interaksi (p > ${alpha}). Efek utama dapat diinterpretasikan langsung.`}</div>
-                <table class="res-table">
-                  <thead><tr><th>Sumber Variasi</th><th>SS</th><th>df</th><th>MS</th><th>F</th><th>p-value</th></tr></thead>
-                  <tbody>
-                    <tr><td>Faktor 1 (${S.vars[fac1Idx].name})</td><td>${fmt(r.SSA)}</td><td>${r.dfA}</td><td>${fmt(r.MSA)}</td><td class="${passA?'sig':''}">${fmt(r.FA)}</td><td class="${passA?'sig':''}">${fmtp(r.pA)}</td></tr>
-                    <tr><td>Faktor 2 (${S.vars[fac2Idx].name})</td><td>${fmt(r.SSB)}</td><td>${r.dfB}</td><td>${fmt(r.MSB)}</td><td class="${passB?'sig':''}">${fmt(r.FB)}</td><td class="${passB?'sig':''}">${fmtp(r.pB)}</td></tr>
-                    <tr><td>Interaksi (1 × 2)</td><td>${fmt(r.SSAB)}</td><td>${r.dfAB}</td><td>${fmt(r.MSAB)}</td><td class="${passAB?'sig':''}">${fmt(r.FAB)}</td><td class="${passAB?'sig':''}">${fmtp(r.pAB)}</td></tr>
-                    <tr><td>Error (Dalam)</td><td>${fmt(r.SSE)}</td><td>${r.dfE}</td><td>${fmt(r.MSE)}</td><td>—</td><td>—</td></tr>
-                    <tr><td><b>Total</b></td><td>${fmt(r.SST)}</td><td>${r.dfA+r.dfB+r.dfAB+r.dfE}</td><td>—</td><td>—</td><td>—</td></tr>
-                  </tbody>
-                </table>
-                <div class="r-note">Metode: <b>Unweighted Means (Type I SS Approximation)</b>. Paling akurat digunakan pada desain observasi Balanced (n yang seimbang antar perlakuan).</div>`;
-  });
-  showResult('Two-Way ANOVA', fullHtml);
+  appendToReport('One-Way ANOVA', fullHtml);
 }
 
 function runPostHoc() {
@@ -1207,7 +1134,7 @@ function runPostHoc() {
   let fullHtml = '';
   
   deps.forEach(depIdx => {
-    fullHtml += `<div class="analysis-section-title">Post Hoc (${meth.toUpperCase()}): ${S.vars[depIdx].name}</div>`;
+    fullHtml += `<div style="font-weight:bold; margin-bottom:8px;">Post Hoc (${meth.toUpperCase()}): ${S.vars[depIdx].name}</div>`;
     if(depIdx === facIdx) { fullHtml += `<div class="r-alert">Variabel Y dan X tidak boleh sama.</div>`; return; }
     
     const { groups, names } = extractGroups(depIdx, facIdx);
@@ -1219,24 +1146,24 @@ function runPostHoc() {
     const means = vG.map(g => mean(g));
     let letters = getLetters(vN, means, pairs, sigKey);
 
-    fullHtml += `<div style="margin-bottom:12px; font-weight:600; color:var(--primary)">Tabel Notasi Subset (Piepho CLD)</div>`;
-    fullHtml += `<table class="res-table"><thead><tr><th>Kelompok</th><th>Rata-rata (Mean)</th><th>Notasi</th></tr></thead><tbody>`;
-    sortedIdx.forEach(u => {
-        fullHtml += `<tr><td>${vN[u]}</td><td>${fmt(means[u])}</td><td class="notation-b">${letters[u]}</td></tr>`;
-    });
+    fullHtml += `<table class="res-table"><thead><tr><th>Kelompok</th><th>Rata-rata (Mean)</th><th>Notasi Subset</th></tr></thead><tbody>`;
+    sortedIdx.forEach(u => { fullHtml += `<tr><td>${vN[u]}</td><td>${fmt(means[u])}</td><td class="notation-b">${letters[u]}</td></tr>`; });
     fullHtml += `</tbody></table>`;
     
     fullHtml += `<div style="margin-top:20px; margin-bottom:12px; font-weight:600; color:var(--text3)">Detail Perbandingan (A - B)</div>`;
     fullHtml += `<table class="res-table"><thead><tr><th>A</th><th>B</th><th>Selisih Mean</th><th>p-value</th><th>Ket</th></tr></thead><tbody>`;
+    let countSig = 0;
     pairs.forEach(r => { 
+      if(r[sigKey]) countSig++;
       fullHtml += `<tr><td>${r.a}</td><td>${r.b}</td><td>${fmt(r.diff)}</td><td class="${r[sigKey]?'sig':''}">${fmtp(r[pKey])}</td><td>${r[sigKey]?'* Beda Nyata':'-'}</td></tr>`; 
     });
     fullHtml += `</tbody></table>`;
     
-    fullHtml += drawBarChart(vN, means, `Grafik & Notasi: ${S.vars[depIdx].name}`, letters);
-    fullHtml += `<div class="r-note">Huruf sama ('a' dan 'a') = tidak berbeda nyata. Huruf berbeda ('a' dan 'b') = berbeda nyata. Notasi diurutkan naik (a = rata-rata terendah).</div>`;
+    fullHtml += drawBarChart(vN, means, `Grafik Rata-rata: ${S.vars[depIdx].name}`, letters);
+    let interpret = `Berdasarkan uji lanjutan ${meth.toUpperCase()}, ditemukan <b>${countSig} pasangan</b> yang berbeda nyata (p ≤ ${alpha}). Kelompok dengan notasi huruf berbeda menunjukkan bahwa rata-rata antar kelompok tersebut secara statistik berbeda.`;
+    fullHtml += `<div class="r-note"><b>Interpretasi:</b><br>${interpret}</div><hr style="border-top:1px dashed var(--border); margin:20px 0;">`;
   });
-  showResult(`Post Hoc Test`, fullHtml);
+  appendToReport(`Post Hoc Test`, fullHtml);
 }
 
 function runKruskal() {
@@ -1248,7 +1175,7 @@ function runKruskal() {
   let fullHtml = '';
   
   deps.forEach(depIdx => {
-    fullHtml += `<div class="analysis-section-title">Kruskal-Wallis: ${S.vars[depIdx].name}</div>`;
+    fullHtml += `<div style="font-weight:bold; margin-bottom:8px;">Kruskal-Wallis: ${S.vars[depIdx].name}</div>`;
     if(depIdx === facIdx) { fullHtml += `<div class="r-alert">Variabel Y dan X tidak boleh sama.</div>`; return; }
     
     const { groups, names } = extractGroups(depIdx, facIdx);
@@ -1256,21 +1183,14 @@ function runKruskal() {
     if(vG.length < 2) { fullHtml += `<div class="r-alert">Butuh minimal 2 kelompok.</div>`; return; }
     
     const r = kruskalWallis(vG), pass = r.p <= alpha;
-
     fullHtml += `<div class="verdict ${pass?'v-fail':'v-pass'}">${pass ? '✅ Terdapat perbedaan distribusi yang signifikan' : '❌ Tidak ada perbedaan signifikan'}</div>
                 <div class="stat-grid">
                   <div class="stat-box"><div class="label">H (terkoreksi ties)</div><div class="value">${fmt(r.H)}</div></div>
                   <div class="stat-box"><div class="label">df</div><div class="value">${r.df}</div></div>
                   <div class="stat-box"><div class="label">p-value</div><div class="value ${pass?'sig':''}">${fmtp(r.p)}</div></div>
-                </div>
-                <table class="res-table">
-                  <thead><tr><th>Kelompok</th><th>n</th><th>Median</th><th>Mean Rank</th><th>Sum Rank</th></tr></thead>
-                  <tbody>${vN.map((nm,i) => `<tr><td>${nm}</td><td>${vG[i].length}</td><td>${fmt(median(vG[i]))}</td><td>${fmt(r.meanRanks[i])}</td><td>${fmt(r.rankSums[i],1)}</td></tr>`).join('')}</tbody>
-                </table>`;
-
+                </div>`;
     if (pass) {
-      let k = vG.length;
-      let pairs = [];
+      let k = vG.length, pairs = [];
       for(let i=0; i<k; i++) {
           for(let j=i+1; j<k; j++) {
               let mw = mannWhitney(vG[i], vG[j], 'two');
@@ -1279,13 +1199,16 @@ function runKruskal() {
           }
       }
       let letters = getLetters(vN, r.meanRanks, pairs, 'p_sig'); 
-      fullHtml += `<div style="margin-top:20px; font-weight:600; color:var(--primary)">Notasi Pairwise Mann-Whitney (Bonferroni)</div>`;
       fullHtml += drawBarChart(vN, r.meanRanks, `Mean Rank per Kelompok`, letters);
     } else {
       fullHtml += drawBarChart(vN, r.meanRanks, `Mean Rank per Kelompok`);
     }
+    let interpret = pass ? 
+        `Uji Kruskal-Wallis menunjukkan terdapat perbedaan distribusi yang signifikan secara statistik antar kelompok pada variabel <b>${S.vars[depIdx].name}</b> (H(${r.df}) = ${fmt(r.H)}, p = ${fmtp(r.p)} ≤ ${alpha}). Notasi grafik mengidentifikasi kelompok mana yang berbeda.` : 
+        `Uji Kruskal-Wallis menunjukkan tidak terdapat perbedaan distribusi yang signifikan antar kelompok pada variabel <b>${S.vars[depIdx].name}</b> (H(${r.df}) = ${fmt(r.H)}, p = ${fmtp(r.p)} > ${alpha}).`;
+    fullHtml += `<div class="r-note"><b>Interpretasi:</b><br>${interpret}</div><hr style="border-top:1px dashed var(--border); margin:20px 0;">`;
   });
-  showResult('Kruskal-Wallis Test', fullHtml);
+  appendToReport('Kruskal-Wallis Test', fullHtml);
 }
 
 function runMannWhitney() {
@@ -1298,7 +1221,7 @@ function runMannWhitney() {
   let fullHtml = '';
   
   deps.forEach(depIdx => {
-    fullHtml += `<div class="analysis-section-title">Mann-Whitney: ${S.vars[depIdx].name}</div>`;
+    fullHtml += `<div style="font-weight:bold; margin-bottom:8px;">Mann-Whitney: ${S.vars[depIdx].name}</div>`;
     if(depIdx === facIdx) { fullHtml += `<div class="r-alert">Variabel Y dan X tidak boleh sama.</div>`; return; }
     
     const { groups, names } = extractGroups(depIdx, facIdx);
@@ -1306,24 +1229,19 @@ function runMannWhitney() {
     if(vG.length !== 2) { fullHtml += `<div class="r-alert">Mann-Whitney U membutuhkan tepat 2 kelompok.</div>`; return; }
     
     const r = mannWhitney(vG[0], vG[1], tail), pass = r.p <= alpha;
-    const tailLabel = tail==='two'?'Dua arah (two-tailed)':tail==='left'?'Satu arah kiri':'Satu arah kanan';
+    const tailLabel = tail==='two'?'Dua arah':tail==='left'?'Satu arah (kiri)':'Satu arah (kanan)';
     fullHtml += `<div class="verdict ${pass?'v-fail':'v-pass'}">${pass ? '✅ Ada perbedaan signifikan antar 2 kelompok' : '❌ Tidak ada perbedaan signifikan'}</div>
-                <table class="res-table">
-                  <thead><tr><th>Kelompok</th><th>n</th><th>Median</th><th>Mean Rank</th><th>Sum Rank</th></tr></thead>
-                  <tbody>
-                    <tr><td>${vN[0]}</td><td>${r.n1}</td><td>${fmt(median(vG[0]))}</td><td>${fmt(r.R1/r.n1)}</td><td>${fmt(r.R1,1)}</td></tr>
-                    <tr><td>${vN[1]}</td><td>${r.n2}</td><td>${fmt(median(vG[1]))}</td><td>${fmt(r.R2/r.n2)}</td><td>${fmt(r.R2,1)}</td></tr>
-                  </tbody>
-                </table>
                 <div class="stat-grid">
-                  <div class="stat-box"><div class="label">U₁</div><div class="value">${fmt(r.U1,1)}</div></div>
-                  <div class="stat-box"><div class="label">U₂</div><div class="value">${fmt(r.U2,1)}</div></div>
-                  <div class="stat-box"><div class="label">Z (approx normal)</div><div class="value">${fmt(r.z)}</div></div>
+                  <div class="stat-box"><div class="label">U₁ / U₂</div><div class="value">${fmt(r.U1,1)} / ${fmt(r.U2,1)}</div></div>
+                  <div class="stat-box"><div class="label">Z-Score</div><div class="value">${fmt(r.z)}</div></div>
                   <div class="stat-box"><div class="label">p-value</div><div class="value ${pass?'sig':''}">${fmtp(r.p)}</div></div>
-                </div>
-                <div class="r-note">Uji: <b>${tailLabel}</b> | Koreksi ties: ${r.tiesCorrected?'Ya':'Tidak'}. Normal approximation berlaku untuk n ≥ 10 per kelompok.</div>`;
+                </div>`;
+    let interpret = pass ? 
+        `Uji Mann-Whitney U (${tailLabel}) menunjukkan bahwa terdapat perbedaan signifikan secara statistik pada variabel <b>${S.vars[depIdx].name}</b> antara kelompok ${vN[0]} dan ${vN[1]} (U = ${fmt(r.U)}, Z = ${fmt(r.z)}, p = ${fmtp(r.p)} ≤ ${alpha}).` : 
+        `Uji Mann-Whitney U (${tailLabel}) menunjukkan bahwa tidak terdapat perbedaan signifikan secara statistik pada variabel <b>${S.vars[depIdx].name}</b> antara kelompok ${vN[0]} dan ${vN[1]} (U = ${fmt(r.U)}, Z = ${fmt(r.z)}, p = ${fmtp(r.p)} > ${alpha}).`;
+    fullHtml += `<div class="r-note"><b>Interpretasi:</b><br>${interpret}</div><hr style="border-top:1px dashed var(--border); margin:20px 0;">`;
   });
-  showResult('Mann-Whitney U Test', fullHtml);
+  appendToReport('Mann-Whitney U Test', fullHtml);
 }
 
 function loadSampleData() {
@@ -1339,7 +1257,7 @@ function loadSampleData() {
   S.vars[0].values = '1=Kontrol, 2=Probiotik_A, 3=Probiotik_B';
   
   renderAll();
-  alert("Data Sampel Dimuat! Aplikasi kini telah menggunakan standar Computational Statistics level publikasi.");
+  alert("Data Sampel Dimuat! Anda dapat melihat hasilnya pada menu analisis.");
 }
 
 init();
