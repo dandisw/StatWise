@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>StatWise by DSW</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2338BDF8%22>📊</text></svg>">
+<meta property="og:title" content="StatWise by DSW">
+<meta property="og:description" content="Mesin komputasi statistik dan uji hipotesis in-browser.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -30,6 +34,25 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font-sans); background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; font-size: 14px; transition: background 0.3s, color 0.3s; }
+
+/* Class Khusus untuk Mengubah Warna Emoji Menjadi Biru DSW Ecosystem */
+.dsw-icon-styled {
+    filter: grayscale(100%);
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+    transition: filter 0.3s ease;
+}
+[data-theme="dark"] .dsw-icon-styled {
+    filter: grayscale(100%) brightness(1.2) sepia(1) hue-rotate(180deg) saturate(4);
+}
+[data-theme="light"] .dsw-icon-styled {
+    filter: grayscale(100%) brightness(0.8) sepia(1) hue-rotate(180deg) saturate(3);
+}
+.menu-item:hover .dsw-icon-styled,
+.btn:hover .dsw-icon-styled {
+    filter: grayscale(100%) brightness(1.5) sepia(1) hue-rotate(180deg) saturate(6);
+}
 
 /* HEADER & RESPONSIVE */
 header { background: var(--surface); padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); flex-shrink: 0; z-index: 10; box-shadow: var(--shadow); transition: background 0.3s; }
@@ -198,9 +221,9 @@ select.var-input option { background: var(--surface); color: var(--text); }
     <div class="brand">Stat<span>Wise</span> <span style="font-size:12px; color:var(--text3); font-family:var(--font-sans); font-weight:400;">by DSW</span></div>
   </div>
   <div class="header-actions">
-    <button class="btn btn-outline" onclick="openAboutDialog()">ℹ️ <span class="btn-text">Panduan & Info</span></button>
-    <button class="btn btn-outline" id="theme-btn" onclick="toggleTheme()">☀️ <span class="btn-text">Tema</span></button>
-    <button class="btn btn-outline" style="color:var(--danger)" onclick="clearAll()">🗑️ <span class="btn-text">Bersihkan</span></button>
+    <button class="btn btn-outline" onclick="openAboutDialog()"><span class="dsw-icon-styled">ℹ️</span> <span class="btn-text">Panduan & Info</span></button>
+    <button class="btn btn-outline" id="theme-btn" onclick="toggleTheme()"><span class="dsw-icon-styled">☀️</span> <span class="btn-text">Tema</span></button>
+    <button class="btn btn-outline" style="color:var(--danger)" onclick="clearAll()"><span class="dsw-icon-styled">🗑️</span> <span class="btn-text">Bersihkan</span></button>
   </div>
 </header>
 
@@ -209,36 +232,36 @@ select.var-input option { background: var(--surface); color: var(--text); }
   <div class="sidebar" id="sidebar">
     <div class="menu-group">
       <div class="menu-title">Manajemen Data</div>
-      <div class="menu-item" onclick="openDialog('missing_data')">🧹 Manajemen Missing Data</div>
-      <div class="menu-item" onclick="openDialog('transform')">🔄 Transformasi Data</div>
-      <div class="menu-item" onclick="openDialog('deskriptif')">📋 Statistik Deskriptif</div>
+      <div class="menu-item" onclick="openDialog('missing_data')"><span class="dsw-icon-styled">🧹</span> Manajemen Missing Data</div>
+      <div class="menu-item" onclick="openDialog('transform')"><span class="dsw-icon-styled">🔄</span> Transformasi Data</div>
+      <div class="menu-item" onclick="openDialog('deskriptif')"><span class="dsw-icon-styled">📋</span> Statistik Deskriptif</div>
     </div>
     <div class="menu-group">
       <div class="menu-title">Uji Asumsi Dasar</div>
-      <div class="menu-item" onclick="openDialog('normalitas')">🔔 Uji Normalitas</div>
-      <div class="menu-item" onclick="openDialog('homogenitas')">⚖️ Uji Homogenitas</div>
+      <div class="menu-item" onclick="openDialog('normalitas')"><span class="dsw-icon-styled">🔔</span> Uji Normalitas</div>
+      <div class="menu-item" onclick="openDialog('homogenitas')"><span class="dsw-icon-styled">⚖️</span> Uji Homogenitas</div>
     </div>
     <div class="menu-group">
       <div class="menu-title">Analisis Parametrik</div>
-      <div class="menu-item" onclick="openDialog('ttest_indep')">⚖️ Uji-T (Independen)</div>
-      <div class="menu-item" onclick="openDialog('ttest_paired')">🔗 Uji-T (Berpasangan)</div>
-      <div class="menu-item" onclick="openDialog('anova1')">📊 One-Way ANOVA</div>
-      <div class="menu-item" onclick="openDialog('anova2')">📈 Two-Way ANOVA</div>
-      <div class="menu-item" onclick="openDialog('posthoc')">🔍 Post Hoc Test</div>
+      <div class="menu-item" onclick="openDialog('ttest_indep')"><span class="dsw-icon-styled">⚖️</span> Uji-T (Independen)</div>
+      <div class="menu-item" onclick="openDialog('ttest_paired')"><span class="dsw-icon-styled">🔗</span> Uji-T (Berpasangan)</div>
+      <div class="menu-item" onclick="openDialog('anova1')"><span class="dsw-icon-styled">📊</span> One-Way ANOVA</div>
+      <div class="menu-item" onclick="openDialog('anova2')"><span class="dsw-icon-styled">📈</span> Two-Way ANOVA</div>
+      <div class="menu-item" onclick="openDialog('posthoc')"><span class="dsw-icon-styled">🔍</span> Post Hoc Test</div>
     </div>
     <div class="menu-group">
       <div class="menu-title">Analisis Non-Parametrik</div>
-      <div class="menu-item" onclick="openDialog('mannwhitney')">🔀 Mann-Whitney U</div>
-      <div class="menu-item" onclick="openDialog('wilcoxon')">📉 Wilcoxon Signed-Rank</div>
-      <div class="menu-item" onclick="openDialog('kruskal')">📉 Kruskal-Wallis</div>
+      <div class="menu-item" onclick="openDialog('mannwhitney')"><span class="dsw-icon-styled">🔀</span> Mann-Whitney U</div>
+      <div class="menu-item" onclick="openDialog('wilcoxon')"><span class="dsw-icon-styled">📉</span> Wilcoxon Signed-Rank</div>
+      <div class="menu-item" onclick="openDialog('kruskal')"><span class="dsw-icon-styled">📉</span> Kruskal-Wallis</div>
     </div>
     <div class="menu-group">
       <div class="menu-title">Hubungan Variabel</div>
-      <div class="menu-item" onclick="openDialog('correg')">📈 Korelasi & Regresi Linear</div>
+      <div class="menu-item" onclick="openDialog('correg')"><span class="dsw-icon-styled">📈</span> Korelasi & Regresi Linear</div>
     </div>
     
     <div class="menu-group" style="margin-top:auto; padding-top:20px;">
-        <div class="menu-item" onclick="loadSampleData()" style="color:var(--success)">📂 Muat Data Sampel</div>
+        <div class="menu-item" onclick="loadSampleData()" style="color:var(--success)"><span class="dsw-icon-styled">📂</span> Muat Data Sampel</div>
     </div>
   </div>
 
@@ -252,8 +275,8 @@ select.var-input option { background: var(--surface); color: var(--text); }
       <div class="toolbar">
         <button class="btn btn-outline" onclick="addColumns(1)">+ Variabel</button>
         <button class="btn btn-outline" onclick="addRows(10)">+ Baris</button>
-        <button class="btn btn-primary" style="margin-left:10px;" onclick="downloadCSV()">📥 Unduh CSV</button>
-        <span style="margin-left:auto; font-size:12px; color:var(--text3); align-self:center;">💡 Tips: Paste data Excel ke tabel</span>
+        <button class="btn btn-primary" style="margin-left:10px;" onclick="downloadCSV()"><span class="dsw-icon-styled">📥</span> Unduh CSV</button>
+        <span style="margin-left:auto; font-size:12px; color:var(--text3); align-self:center;"><span class="dsw-icon-styled">💡</span> Tips: Paste data Excel ke tabel</span>
       </div>
       <div class="table-wrapper">
         <table id="data-table">
@@ -288,8 +311,8 @@ select.var-input option { background: var(--surface); color: var(--text); }
       <div class="result-header">
         <div class="result-title" id="res-title">Laporan Analisis</div>
         <div style="display:flex; gap:8px; align-items:center;">
-            <button class="btn btn-outline" id="btn-clear-report" style="padding: 6px 10px; font-size: 12px; color:var(--danger)" onclick="clearReport()">🗑️ Reset</button>
-            <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="window.print()">🖨️ Ekspor PDF</button>
+            <button class="btn btn-outline" id="btn-clear-report" style="padding: 6px 10px; font-size: 12px; color:var(--danger)" onclick="clearReport()"><span class="dsw-icon-styled">🗑️</span> Reset</button>
+            <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="window.print()"><span class="dsw-icon-styled">🖨️</span> Ekspor PDF</button>
             <button class="close-btn" onclick="closeResult()">×</button>
         </div>
       </div>
@@ -314,14 +337,14 @@ select.var-input option { background: var(--surface); color: var(--text); }
 <div class="overlay" id="about-dialog">
   <div class="dialog">
     <div class="dialog-header">
-      <span>ℹ️ Informasi StatWise</span>
+      <span><span class="dsw-icon-styled">ℹ️</span> Informasi StatWise</span>
       <button class="close-btn" onclick="closeAboutDialog()" style="font-size:20px; border:none; background:none;">×</button>
     </div>
     <div class="dialog-body">
       <div class="about-tabs">
-        <div class="about-tab active" onclick="switchAboutTab('guide')">📖 Panduan Penggunaan</div>
-        <div class="about-tab" onclick="switchAboutTab('ref')">📚 Referensi Statistik</div>
-        <div class="about-tab" onclick="switchAboutTab('log')">🚀 Riwayat Pembaruan</div>
+        <div class="about-tab active" onclick="switchAboutTab('guide')"><span class="dsw-icon-styled">📖</span> Panduan Penggunaan</div>
+        <div class="about-tab" onclick="switchAboutTab('ref')"><span class="dsw-icon-styled">📚</span> Referensi Statistik</div>
+        <div class="about-tab" onclick="switchAboutTab('log')"><span class="dsw-icon-styled">🚀</span> Riwayat Pembaruan</div>
       </div>
       
       <div class="about-section active" id="sec-guide">
@@ -370,7 +393,7 @@ select.var-input option { background: var(--surface); color: var(--text); }
       </div>
     </div>
     <div class="dialog-footer">
-      <a href="https://drive.google.com/file/d/1sOKEApAzIJm2us5106my5XQAUsSIfoi9/view?usp=drivesdk" target="_blank" class="btn btn-outline" style="color:var(--success); border-color:var(--success);">▶️ Video Tutorial Lengkap</a>
+      <a href="https://drive.google.com/file/d/1sOKEApAzIJm2us5106my5XQAUsSIfoi9/view?usp=drivesdk" target="_blank" class="btn btn-outline" style="color:var(--success); border-color:var(--success);"><span class="dsw-icon-styled">▶️</span> Video Tutorial Lengkap</a>
       <button class="btn btn-primary" onclick="closeAboutDialog()">Tutup</button>
     </div>
   </div>
@@ -389,8 +412,14 @@ function toggleSidebar() {
 
 function toggleTheme() {
   const html = document.documentElement; const btn = document.getElementById('theme-btn');
-  if (html.getAttribute('data-theme') === 'dark') { html.setAttribute('data-theme', 'light'); btn.innerHTML = '🌙 <span class="btn-text">Mode Gelap</span>'; } 
-  else { html.setAttribute('data-theme', 'dark'); btn.innerHTML = '☀️ <span class="btn-text">Mode Terang</span>'; }
+  if (html.getAttribute('data-theme') === 'dark') { 
+      html.setAttribute('data-theme', 'light'); 
+      btn.innerHTML = '<span class="dsw-icon-styled">🌙</span> <span class="btn-text">Mode Gelap</span>'; 
+  } 
+  else { 
+      html.setAttribute('data-theme', 'dark'); 
+      btn.innerHTML = '<span class="dsw-icon-styled">☀️</span> <span class="btn-text">Mode Terang</span>'; 
+  }
 }
 
 const S = { rows: 25, cols: 2, vars: [{ name: 'Perlakuan', type: 'nominal', role: 'factor', values: '' }, { name: 'Hasil', type: 'scale', role: 'dep', values: '' }], data: [] };
@@ -513,7 +542,7 @@ function copyTableToClipboard(btn) {
   for (let row of table.rows) { let rD = []; for (let cell of row.cells) rD.push(cell.innerText.trim()); text += rD.join('\t') + '\n'; }
   navigator.clipboard.writeText(text).then(() => { const oldText = btn.innerHTML; btn.innerHTML = "✅ Tersalin!"; btn.style.color = "var(--success)"; setTimeout(() => { btn.innerHTML = oldText; btn.style.color = ""; }, 2000); });
 }
-function generateTable(htmlContent) { return `<div class="tbl-container"><button class="btn btn-outline btn-sm copy-btn" onclick="copyTableToClipboard(this)">📋 Salin Tabel</button>${htmlContent}</div>`; }
+function generateTable(htmlContent) { return `<div class="tbl-container"><button class="btn btn-outline btn-sm copy-btn" onclick="copyTableToClipboard(this)"><span class="dsw-icon-styled">📋</span> Salin Tabel</button>${htmlContent}</div>`; }
 
 // ==========================================
 // CORE MATH ENGINE 10.0 (MATRIX, LILLIEFORS, EXACT MW)
@@ -800,7 +829,7 @@ function appendToReport(title, htmlContent) {
   const reportArea = document.getElementById('res-content-area'); const block = document.createElement('div'); block.className = 'report-block';
   block.innerHTML = `<div class="report-header"><h3 class="report-title">${title}</h3><button class="remove-block-btn" onclick="removeBlock(this)">✖</button></div>${htmlContent}`;
   reportArea.appendChild(block); document.getElementById('result-panel').classList.add('open');
-  if(window.innerWidth <= 768) toggleSidebar(); // Close sidebar on mobile when showing result
+  if(window.innerWidth <= 768) toggleSidebar(); 
   setTimeout(() => { const body = document.querySelector('.result-body'); body.scrollTo({ top: body.scrollHeight, behavior: 'smooth' }); block.querySelectorAll('.bar-fill').forEach(bar => { const h = bar.style.height; bar.style.height = '0%'; setTimeout(() => bar.style.height = h, 50); }); }, 100);
 }
 
@@ -816,46 +845,46 @@ function openDialog(type) {
     <div class="form-group"><label>Tema Grafik</label><select class="form-control" id="dlg-theme"><option value="var(--primary)">Klasik Biru (Default)</option><option value="#A78BFA">Pastel Ungu</option><option value="#10B981">Viridis Hijau</option><option value="#475569">Monokrom (B&W)</option></select></div>`;
 
   if(type === 'missing_data') {
-    dlgTitle.textContent = '🧹 Manajemen Missing Data'; html += depSelector;
+    dlgTitle.innerHTML = '<span class="dsw-icon-styled">🧹</span> Manajemen Missing Data'; html += depSelector;
     html += `<div class="form-group"><label>Metode Penanganan</label><select class="form-control" id="dlg-missing"><option value="listwise">Hapus Baris Kosong (Listwise Deletion)</option><option value="mean">Imputasi: Isi Rata-rata (Mean)</option><option value="median">Imputasi: Isi Median</option></select></div>`;
     html += `<div class="r-note">Perhatian: Fungsi ini mengubah langsung Data View Anda. Unduh CSV jika perlu backup.</div>`;
     dlgBtn.onclick = () => runMissingData();
   } else if(type === 'transform') {
-    dlgTitle.textContent = '🔄 Transformasi Data'; html += depSelector;
+    dlgTitle.innerHTML = '<span class="dsw-icon-styled">🔄</span> Transformasi Data'; html += depSelector;
     html += `<div class="form-group"><label>Metode</label><select class="form-control" id="dlg-trans"><option value="log10">Logaritma 10 (Log10(x))</option><option value="sqrt">Akar Kuadrat (√x)</option><option value="arcsin">Arkus Sinus (Asin(√(x/100)))</option></select></div>`;
     dlgBtn.onclick = () => {
       const deps = getSelectedDeps('dlg-dep-container'), trans = document.getElementById('dlg-trans').value; if(!deps.length) return alert('Pilih variabel!'); closeDialog();
       deps.forEach(c => { for(let r=0; r<S.rows; r++){ let v = parseFloat(String(S.data[r][c]).replace(',','.')); if(!isNaN(v)){ if(trans==='log10') v=v>0?Math.log10(v):''; else if(trans==='sqrt') v=v>=0?Math.sqrt(v):''; else if(trans==='arcsin') v=v>=0&&v<=100?Math.asin(Math.sqrt(v/100)):''; S.data[r][c] = v!==''?v.toFixed(4):''; } } }); renderDataBody(); alert("Sukses!");
     };
   } else if(type === 'deskriptif') {
-    dlgTitle.textContent = '📋 Statistik Deskriptif'; html += depSelector; dlgBtn.onclick = () => runDeskriptif();
+    dlgTitle.innerHTML = '<span class="dsw-icon-styled">📋</span> Statistik Deskriptif'; html += depSelector; dlgBtn.onclick = () => runDeskriptif();
   } else if (type === 'normalitas') {
-    dlgTitle.textContent = '🔔 Uji Normalitas'; html += depSelector;
+    dlgTitle.innerHTML = '<span class="dsw-icon-styled">🔔</span> Uji Normalitas'; html += depSelector;
     html += `<div class="form-group"><label>Faktor (Opsional)</label><select class="form-control" id="dlg-fac"><option value="-1">— Keseluruhan —</option>${getFilteredOptions('nominal')}</select></div>`;
     dlgBtn.onclick = () => runNormalitas();
   } else if (type === 'homogenitas') {
-    dlgTitle.textContent = '⚖️ Uji Homogenitas'; html += depSelector;
+    dlgTitle.innerHTML = '<span class="dsw-icon-styled">⚖️</span> Uji Homogenitas'; html += depSelector;
     html += `<div class="form-group"><label>Faktor</label><select class="form-control" id="dlg-fac">${getFilteredOptions('nominal')}</select></div>`;
     html += `<div class="form-group"><label>Metode Uji</label><select class="form-control" id="dlg-method"><option value="median">Levene (Basis Median - Standar Robust)</option><option value="mean">Levene (Basis Mean - Standar SPSS)</option><option value="bartlett">Bartlett (Parametrik Normal)</option></select></div>`;
     dlgBtn.onclick = () => runHomogenitas();
   } else if (type === 'ttest_indep') {
-    dlgTitle.textContent = '⚖️ Uji-T (Independen)'; html += depSelector;
+    dlgTitle.innerHTML = '<span class="dsw-icon-styled">⚖️</span> Uji-T (Independen)'; html += depSelector;
     html += `<div class="form-group"><label>Faktor (2 Kelompok)</label><select class="form-control" id="dlg-fac">${getFilteredOptions('nominal')}</select></div>` + chartOptions; dlgBtn.onclick = () => runTTestIndep();
   } else if (type === 'ttest_paired' || type === 'wilcoxon') {
-    dlgTitle.textContent = type === 'ttest_paired' ? '🔗 Paired Sample T-Test' : '📉 Wilcoxon Signed-Rank';
+    dlgTitle.innerHTML = type === 'ttest_paired' ? '<span class="dsw-icon-styled">🔗</span> Paired Sample T-Test' : '<span class="dsw-icon-styled">📉</span> Wilcoxon Signed-Rank';
     html += `<div class="form-group"><label>Var 1 (Pre)</label><select class="form-control" id="dlg-var1">${getFilteredOptions('scale')}</select></div><div class="form-group"><label>Var 2 (Post)</label><select class="form-control" id="dlg-var2">${getFilteredOptions('scale')}</select></div>` + chartOptions; dlgBtn.onclick = () => runPaired(type);
   } else if(type === 'anova1') {
-    dlgTitle.textContent = '📊 One-Way ANOVA'; html += depSelector + `<div class="form-group"><label>Faktor Kelompok</label><select class="form-control" id="dlg-fac">${getFilteredOptions('nominal')}</select></div>` + chartOptions; dlgBtn.onclick = () => runAnova1();
+    dlgTitle.innerHTML = '<span class="dsw-icon-styled">📊</span> One-Way ANOVA'; html += depSelector + `<div class="form-group"><label>Faktor Kelompok</label><select class="form-control" id="dlg-fac">${getFilteredOptions('nominal')}</select></div>` + chartOptions; dlgBtn.onclick = () => runAnova1();
   } else if(type === 'anova2') {
-    dlgTitle.textContent = '📈 Two-Way ANOVA (GLM Type III)'; html += depSelector + `<div class="form-group"><label>Faktor A</label><select class="form-control" id="dlg-fac1">${getFilteredOptions('nominal')}</select></div><div class="form-group"><label>Faktor B</label><select class="form-control" id="dlg-fac2">${getFilteredOptions('nominal')}</select></div>`; dlgBtn.onclick = () => runAnova2();
+    dlgTitle.innerHTML = '<span class="dsw-icon-styled">📈</span> Two-Way ANOVA (GLM Type III)'; html += depSelector + `<div class="form-group"><label>Faktor A</label><select class="form-control" id="dlg-fac1">${getFilteredOptions('nominal')}</select></div><div class="form-group"><label>Faktor B</label><select class="form-control" id="dlg-fac2">${getFilteredOptions('nominal')}</select></div>`; dlgBtn.onclick = () => runAnova2();
   } else if(type === 'posthoc') {
-    dlgTitle.textContent = '🔍 Post Hoc Test'; html += depSelector + `<div class="form-group"><label>Faktor</label><select class="form-control" id="dlg-fac">${getFilteredOptions('nominal')}</select></div><div class="form-group"><label>Metode</label><select class="form-control" id="dlg-method"><option value="tukey">Tukey HSD</option><option value="duncan">Duncan's MRT</option><option value="lsd">Fisher's LSD</option></select></div>` + chartOptions; dlgBtn.onclick = () => runPostHoc();
+    dlgTitle.innerHTML = '<span class="dsw-icon-styled">🔍</span> Post Hoc Test'; html += depSelector + `<div class="form-group"><label>Faktor</label><select class="form-control" id="dlg-fac">${getFilteredOptions('nominal')}</select></div><div class="form-group"><label>Metode</label><select class="form-control" id="dlg-method"><option value="tukey">Tukey HSD</option><option value="duncan">Duncan's MRT</option><option value="lsd">Fisher's LSD</option></select></div>` + chartOptions; dlgBtn.onclick = () => runPostHoc();
   } else if(type === 'kruskal') {
-    dlgTitle.textContent = '📉 Kruskal-Wallis'; html += depSelector + `<div class="form-group"><label>Faktor</label><select class="form-control" id="dlg-fac">${getFilteredOptions('nominal')}</select></div><div class="form-group"><label>Uji Lanjut</label><select class="form-control" id="dlg-method"><option value="dunn">Dunn's Test (R Standard)</option><option value="mw">Pairwise Mann-Whitney</option></select></div>` + chartOptions; dlgBtn.onclick = () => runKruskal();
+    dlgTitle.innerHTML = '<span class="dsw-icon-styled">📉</span> Kruskal-Wallis'; html += depSelector + `<div class="form-group"><label>Faktor</label><select class="form-control" id="dlg-fac">${getFilteredOptions('nominal')}</select></div><div class="form-group"><label>Uji Lanjut</label><select class="form-control" id="dlg-method"><option value="dunn">Dunn's Test (R Standard)</option><option value="mw">Pairwise Mann-Whitney</option></select></div>` + chartOptions; dlgBtn.onclick = () => runKruskal();
   } else if(type === 'mannwhitney') {
-    dlgTitle.textContent = '🔀 Mann-Whitney U'; html += depSelector + `<div class="form-group"><label>Faktor (2 Grup)</label><select class="form-control" id="dlg-fac">${getFilteredOptions('nominal')}</select></div><div class="form-group"><label>Arah Uji</label><select class="form-control" id="dlg-tail"><option value="two">Two-tailed</option><option value="right">One-tailed Kanan</option><option value="left">One-tailed Kiri</option></select></div>` + chartOptions; dlgBtn.onclick = () => runMannWhitney();
+    dlgTitle.innerHTML = '<span class="dsw-icon-styled">🔀</span> Mann-Whitney U'; html += depSelector + `<div class="form-group"><label>Faktor (2 Grup)</label><select class="form-control" id="dlg-fac">${getFilteredOptions('nominal')}</select></div><div class="form-group"><label>Arah Uji</label><select class="form-control" id="dlg-tail"><option value="two">Two-tailed</option><option value="right">One-tailed Kanan</option><option value="left">One-tailed Kiri</option></select></div>` + chartOptions; dlgBtn.onclick = () => runMannWhitney();
   } else if (type === 'correg') {
-    dlgTitle.textContent = '📈 Korelasi & Regresi Linear';
+    dlgTitle.innerHTML = '<span class="dsw-icon-styled">📈</span> Korelasi & Regresi Linear';
     html += `<div class="form-group"><label>Var Bebas (X)</label><select class="form-control" id="dlg-varX">${getFilteredOptions('scale')}</select></div><div class="form-group"><label>Var Terikat (Y)</label><select class="form-control" id="dlg-varY">${getFilteredOptions('scale')}</select></div><div class="form-group"><label>Korelasi</label><select class="form-control" id="dlg-method"><option value="pearson">Pearson (Parametrik)</option><option value="spearman">Spearman (Non-Parametrik)</option></select></div><div class="form-group"><label>Tema Grafik</label><select class="form-control" id="dlg-theme"><option value="var(--primary)">Klasik Biru</option><option value="#A78BFA">Pastel Ungu</option><option value="#10B981">Viridis Hijau</option></select></div>`; dlgBtn.onclick = () => runCorReg();
   }
   dlgBody.innerHTML = html; document.getElementById('dialog-overlay').classList.add('active');
